@@ -287,7 +287,11 @@ public class LastChangesPublisher extends Recorder implements SimpleBuildStep, S
             LOG.log(Level.SEVERE, "Could not publish LastChanges.", e);
         } finally {
             if (vcsTargetDir != null && vcsTargetDir.exists()) {
-                vcsTargetDir.deleteRecursive();//delete copied dir on master
+                try {
+                    vcsTargetDir.deleteRecursive();//delete copied dir on master
+                } catch (Exception e) {
+                    LOG.log(Level.WARNING, "Could not delete vcsTargetDir: " + vcsTargetDir, e);
+                }
             }
         }
         // always success (only warn when no diff was generated)
